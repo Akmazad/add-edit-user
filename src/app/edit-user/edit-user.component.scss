@@ -1,0 +1,18 @@
+mat-card{
+    margin: 24px;
+  }
+  
+  .mat-list .mat-list-item{
+    height: auto;
+    min-height: 48px;
+  }
+  
+  mat-card-actions button{
+    text-transform: uppercase;
+  }
+  
+  mat-card-actions button[mat-button] {
+    width: 100%;
+  }
+  
+  

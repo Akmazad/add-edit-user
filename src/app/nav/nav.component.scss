@@ -1,0 +1,16 @@
+.show-small{
+  display: none;
+}
+
+.hide-small{
+  display: flex;
+}
+
+@media (max-width: 720px) {
+  .show-small{
+    display: flex;
+  }
+  .hide-small{
+    display: none;
+  }
+}

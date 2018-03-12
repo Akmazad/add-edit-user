@@ -1,0 +1,47 @@
+<!-- <div class="mat-elevation-z6" >
+  <h1 style="text-align:center">
+    {{ title }}
+  </h1>
+  <nav>
+    <a routerLink="/homepage">Home</a>
+  </nav>
+</div> -->
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>
+      <h1 style="text-align:center">
+      {{ title }}
+      </h1>
+    </span>
+
+    <!-- Filler that pushes the menu button to the end of the toolbar -->
+    <span fxFlex>
+
+    </span>
+    <nav class="hide-small">
+      <a tabindex="0" mat-button routerLink="/homepage">Home</a>
+      <!-- <a tabindex="1" mat-button routerLink="/blog">Blog</a>
+      <a tabindex="2" mat-button routerLink="/contact">Contact</a> -->
+    </nav>
+
+
+
+    <button class="show-small" mat-icon-button [matMenuTriggerFor]="themeMenu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </mat-toolbar-row>
+  <!-- <mat-toolbar-row class="show-small">
+    <nav>
+      <a tabindex="0" mat-button routerLink="/homepage">Home</a>
+      <a tabindex="1" mat-button routerLink="/blog">Blog</a>
+      <a tabindex="2" mat-button routerLink="/contact">Contact</a>
+    </nav>
+  </mat-toolbar-row> -->
+</mat-toolbar>
+<mat-menu #themeMenu x-position="before">
+  <nav fxLayout="column" fxFlex>
+    <a tabindex="0" mat-button routerLink="/homepage">Home</a>
+    <!-- <a tabindex="1" mat-button routerLink="/blog">Blog</a>
+    <a tabindex="2" mat-button routerLink="/contact">Contact</a> -->
+  </nav>
+</mat-menu>

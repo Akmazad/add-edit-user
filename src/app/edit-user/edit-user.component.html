@@ -26,11 +26,15 @@
             </mat-form-field> -->
 
             <mat-form-field>
-                <input matInput [max]="today" onkeydown="return false" [matDatepicker]="dp3" placeholder="Date of birth"  (click)="dp3.open()" formControlName="dateOfBirth">
-                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
-                <mat-datepicker #dp3 disabled="false" [touchUi]="true" [startView]="multi-year" ></mat-datepicker>
-              </mat-form-field>
-
+              <input matInput [max]="today" onkeydown="return false" [matDatepicker]="dp3" placeholder="Date of birth"  (click)="dp3.open()" formControlName="dateOfBirth">
+              <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+              <mat-datepicker #dp3 disabled="false" [touchUi]="true" [startView]="multi-year" ></mat-datepicker>
+            </mat-form-field>
+              
+            <mat-form-field>
+              <input matInput placeholder="Address" formControlName="address"  autocorrect="off" spellcheck="off" #search required>
+              <mat-error *ngIf="editUserForm.controls['address'].errors && !editUserForm.controls['address'].pristine">{{getErrorMessage('address')}}</mat-error>
+            </mat-form-field>
           </div>
         </mat-card-content>
         <mat-card-actions>
@@ -38,5 +42,4 @@
         </mat-card-actions>
       </form>
     </mat-card>
-
   </div>

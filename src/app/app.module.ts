@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
+import { AgmCoreModule } from '@agm/core';
 import 'hammerjs';
 
 
@@ -36,7 +38,11 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    AsyncLocalStorageModule
+    AsyncLocalStorageModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDxcHSDn_kHjgSbjMnxQxsiuGGtXdmnupI',
+      libraries: ["places"]
+    })
   ],
   providers: [LocalstorageService],
   bootstrap: [AppComponent]

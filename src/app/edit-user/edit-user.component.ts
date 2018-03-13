@@ -1,9 +1,12 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ElementRef, ViewChild, NgZone } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import moment from 'moment/src/moment';
+
+import { AgmCoreModule, MapsAPILoader } from '@agm/core';
+import { } from '@types/googlemaps';
 
 import {LocalstorageService} from '../services/localstorage.service';
 import {User} from '../models/user.model';
@@ -20,7 +23,7 @@ export const MY_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
-
+//AIzaSyDxcHSDn_kHjgSbjMnxQxsiuGGtXdmnupI
 
 @Component({
   selector: 'app-edit-user',
@@ -38,6 +41,9 @@ export const MY_FORMATS = {
 export class EditUserComponent implements OnInit {
   @Input() user: User;
   @Output() showUserDetail = new EventEmitter<User>();
+  @ViewChild("search")
+  public searchElementRef: ElementRef;
+  
 
   today: Date = moment();
   editUserForm: FormGroup;
@@ -56,24 +62,43 @@ export class EditUserComponent implements OnInit {
       return this.editUserForm.controls.email.hasError('required') ? 'You must enter a value' :
       this.editUserForm.controls.email.hasError('email') ? 'Not a valid email' :
           '';
-      // case 'dateOfBirth':
-      // return   this.editUserForm.controls.dateOfBirth.hasError('required') ? 'You must enter a value' : ''; 
+      case 'address':
+      return   this.editUserForm.controls.address.hasError('required') ? 'You must enter a value' : ''; 
     }
   }
 
-  constructor(private localstorageService: LocalstorageService) { }
+  constructor(private localstorageService: LocalstorageService, private mapsAPILoader: MapsAPILoader,
+    private ngZone: NgZone) { }
 
   ngOnInit() {
     this.createForm();
+    this.mapsAPILoader.load().then(() => {
+      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
+        types: ["address"]
+      });
+
+      autocomplete.addListener("place_changed", () => {
+        this.ngZone.run(() => {
+          //get the place result
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+  
+          //verify result
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          console.log(place);  
+          this.editUserForm.value.address = place.formatted_address;      
+        });
+      });
+    });
   }
 
   save() {
     console.log(this.editUserForm.value);
-    var addressStr = '38 Deoro Parade, Clyde North, VIC 3978';
     this.localstorageService.
-    updateUser(this.editUserForm.value.name, this.editUserForm.value.email, this.editUserForm.value.dateOfBirth.toDate(), addressStr).subscribe((data)=>{
+    updateUser(this.editUserForm.value.name, this.editUserForm.value.email, this.editUserForm.value.dateOfBirth.toDate(), this.editUserForm.value.address).subscribe((data)=>{
       console.log('saved', data);
-      let user: User = new User(this.editUserForm.value.name, this.editUserForm.value.email, this.editUserForm.value.dateOfBirth.toDate(), new Address(addressStr));
+      let user: User = new User(this.editUserForm.value.name, this.editUserForm.value.email, this.editUserForm.value.dateOfBirth.toDate(), new Address(this.editUserForm.value.address));
       this.showUserDetail.emit(user);
     });
   }
@@ -83,8 +108,27 @@ export class EditUserComponent implements OnInit {
       // tslint:disable-next-line
       name: new FormControl(this.user ? this.user.name: '', [Validators.required]),
       email: new FormControl(this.user ? this.user.email: '', [Validators.required]),
-      dateOfBirth: new FormControl(this.user ? moment(this.user.dateOfBirth) : this.today)
+      dateOfBirth: new FormControl(this.user ? moment(this.user.dateOfBirth) : this.today),
+      address: new FormControl(this.user ? this.user.address.addressStr: '', [Validators.required]),
     });
   }
+
+  // geolocate(){
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(function(position) {
+  //       var geolocation = {
+  //         lat: position.coords.latitude,
+  //         lng: position.coords.longitude
+  //       };
+  //       var circle = new google.maps.Circle({
+  //         center: geolocation,
+  //         radius: position.coords.accuracy
+  //       });
+  //       autocomplete.setBounds(circle.getBounds());
+  //     });
+  //   }
+  // }
+
+  
 
 }

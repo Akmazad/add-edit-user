@@ -15,6 +15,7 @@ import {User} from '../models/user.model';
 export class HomepageComponent implements OnInit {
   showEditUser: boolean;
   loading: boolean = true;
+  user: User;
 
   constructor(private route: ActivatedRoute, private localstorageService: LocalstorageService) { }
 
@@ -23,10 +24,21 @@ export class HomepageComponent implements OnInit {
     this.localstorageService.getUser().subscribe((user : User)=>{
       console.log(user);
       if (user) {
+        this.user = user;
         this.showEditUser = false;
       }
       this.loading = false;
     });
+  }
+
+  editUser() {
+    this.showEditUser = true;
+  }
+
+  showUserDetail (data) {
+    console.log(data);
+    this.user = data;
+    this.showEditUser = false;
   }
 
 }

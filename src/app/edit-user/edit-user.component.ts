@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
@@ -6,6 +6,8 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 import moment from 'moment/src/moment';
 
 import {LocalstorageService} from '../services/localstorage.service';
+import {User} from '../models/user.model';
+import {Address} from '../models/address.model';
 
 export const MY_FORMATS = {
   parse: {
@@ -34,6 +36,9 @@ export const MY_FORMATS = {
   ]
 })
 export class EditUserComponent implements OnInit {
+  @Input() user: User;
+  @Output() showUserDetail = new EventEmitter<User>();
+
   today: Date = moment();
   editUserForm: FormGroup;
   // name = new FormControl('', [Validators.required]);
@@ -64,18 +69,21 @@ export class EditUserComponent implements OnInit {
 
   save() {
     console.log(this.editUserForm.value);
+    var addressStr = '38 Deoro Parade, Clyde North, VIC 3978';
     this.localstorageService.
-    updateUser(this.editUserForm.value.name, this.editUserForm.value.email, this.editUserForm.value.dateOfBirth.toDate(), '38 Deoro Parade, Clyde North, VIC 3978').subscribe((data)=>{
+    updateUser(this.editUserForm.value.name, this.editUserForm.value.email, this.editUserForm.value.dateOfBirth.toDate(), addressStr).subscribe((data)=>{
       console.log('saved', data);
+      let user: User = new User(this.editUserForm.value.name, this.editUserForm.value.email, this.editUserForm.value.dateOfBirth.toDate(), new Address(addressStr));
+      this.showUserDetail.emit(user);
     });
   }
 
   private createForm() {
     this.editUserForm = new FormGroup({
       // tslint:disable-next-line
-      name: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required]),
-      dateOfBirth: new FormControl(this.today)
+      name: new FormControl(this.user ? this.user.name: '', [Validators.required]),
+      email: new FormControl(this.user ? this.user.email: '', [Validators.required]),
+      dateOfBirth: new FormControl(this.user ? moment(this.user.dateOfBirth) : this.today)
     });
   }
 

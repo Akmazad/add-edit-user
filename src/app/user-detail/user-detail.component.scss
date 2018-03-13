@@ -1,0 +1,32 @@
+mat-card{
+    margin: 24px;
+}
+
+.mat-caption{
+    color: rgba(0,0,0,.54);
+}
+
+mat-card-actions button{
+    text-transform: uppercase;
+}
+
+mat-card-actions button[mat-button] {
+    width: 100%;
+}
+
+
+mat-card-header{
+    margin: -24px -16px 24px -16px;
+    background: rgba(0,0,0,0.03);
+    padding: 8px;
+}
+
+
+mat-card-header .mat-card-header-text{
+    padding: 24px 16px 0 16px;
+    width: 100%;
+}
+
+.mat-card>:first-child {
+    margin-top: -24px;
+}

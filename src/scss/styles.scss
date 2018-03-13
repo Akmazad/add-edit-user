@@ -44,4 +44,26 @@
     font-size: 30px;
     line-height: 36px;
     font-weight: 200;
-  }
+  } 
+
+mat-card{
+    margin: 24px;
+}
+
+mat-card-actions button{
+    text-transform: uppercase;
+}
+
+mat-card-actions button[mat-button] {
+    width: 100%;
+}
+
+// mat-card-header{
+//     margin: -24px -24px 24px -24px;
+//     background: rgba(0,0,0,0.03);
+//     padding: 8px;
+// }
+
+
+
+  
